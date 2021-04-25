@@ -3,6 +3,7 @@ package com.example.apecsapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,10 @@ public class PictureFolders extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 Toast.makeText(getApplicationContext(), maplist.get(p3).get("title").toString(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(PictureFolders.this, Pictures.class);
+                startActivity(intent);
+
+
             }
         });
         {
@@ -129,16 +134,16 @@ public class PictureFolders extends AppCompatActivity {
 
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = convertView;
-            // Inflate the layout for each list item
+
             LayoutInflater _inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (v == null) {
                 v = _inflater.inflate(R.layout.list_item, null);
             }
-            // Get the TextView and ImageView from CustomView for displaying item
+
             TextView txtview = (TextView) v.findViewById(R.id.listitemTextView1);
             ImageView imgview = (ImageView) v.findViewById(R.id.listitemImageView1);
 
-            // Set the text and image for current item using data from map list
+
             txtview.setText(maplist.get(position).get("title").toString());
             imgview.setImageResource((Integer) maplist.get(position).get("icon"));
             return v;
