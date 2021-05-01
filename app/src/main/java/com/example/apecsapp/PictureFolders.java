@@ -32,6 +32,7 @@ public class PictureFolders extends AppCompatActivity {
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 Toast.makeText(getApplicationContext(), maplist.get(p3).get("title").toString(), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(PictureFolders.this, Pictures.class);
+                intent.putExtra("title",maplist.get(p3).get("title").toString());
                 startActivity(intent);
 
 

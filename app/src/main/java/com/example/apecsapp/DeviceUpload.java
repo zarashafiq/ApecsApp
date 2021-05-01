@@ -33,7 +33,7 @@ public class DeviceUpload extends AppCompatActivity {
         });
     }
     public void launchCommunicationInterface (View view){
-        Intent intent = new Intent(this, CommunicationInterface.class);
+        Intent intent = new Intent(this, selectedPictures.class);
         intent.putExtra("imageuri", imageUri.toString());
         startActivity(intent);
     }
