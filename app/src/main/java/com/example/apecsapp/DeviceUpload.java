@@ -1,15 +1,14 @@
 package com.example.apecsapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class DeviceUpload extends AppCompatActivity {
@@ -33,7 +32,7 @@ public class DeviceUpload extends AppCompatActivity {
         });
     }
     public void launchCommunicationInterface (View view){
-        Intent intent = new Intent(this, selectedPictures.class);
+        Intent intent = new Intent(this, CommunicationInterface.class);
         intent.putExtra("imageuri", imageUri.toString());
         startActivity(intent);
     }

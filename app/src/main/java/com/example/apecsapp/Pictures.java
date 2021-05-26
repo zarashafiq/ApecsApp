@@ -1,50 +1,31 @@
 package com.example.apecsapp;
 
-import androidx.annotation.RequiresApi;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
-import android.media.ImageReader;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.text.Editable;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
 //import android.support.design.widget.FloatingActionButton;
 //import android.support.design.widget.Snackbar;
 //import android.support.v7.app.AppCompatActivity;
 
-import android.view.View;
-import android.widget.GridView;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
-
 public class Pictures extends AppCompatActivity {
-    private GridView gridview1;
+    GridView gridview1;
     TextView textview;
     String[] resId;
     String scenario;
+    int value;
+    String finalEd;
+    SharedPreferences sharedPreferences;
+    int counter=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,20 +78,46 @@ public class Pictures extends AppCompatActivity {
 
 
             }}
+
         gridview1 = (GridView) findViewById(R.id.mainGridView2);
+        sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
+        value = sharedPreferences.getInt("level",1);
         gridview1.setOnItemClickListener(new GridView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                textview=findViewById(R.id.pictureitemTextView1);
-                String s= (String) textview.getText();
-                String uri= resId[p3];
-                Toast.makeText(getApplicationContext(), s , Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Pictures.this, selectedPictures.class);
-                intent.putExtra("liburi",uri);
-                intent.putExtra("title",s);
+                Uri uri= Uri.parse(resId[p3]);
+                String s=uri.getLastPathSegment().substring(0, uri.getLastPathSegment().length() - 4);
+                if(s.contains("_"))
+                {String ed1=null;
+                    ed1=s.replace("_"," ");
+                    finalEd = ed1;}
+                else {finalEd=s;}
+                Toast.makeText(getApplicationContext(), finalEd, Toast.LENGTH_LONG).show();
+                String Suri=uri.toString();
+                sharedPreferences= getSharedPreferences("myKey", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+////                editor.putString("value", uri);
+////                editor.apply();
+                if(value==1){
+                Intent intent = new Intent(Pictures.this, CommunicationInterface.class);
+                editor.putString("liburi",Suri);
+                editor.putString("title",finalEd);
+                editor.putInt("counter",counter);
+                editor.apply();
                 startActivity(intent);
-
-
+                }
+                if(value==2)
+                {editor.putString("value",Suri);
+                editor.putString("title",finalEd);
+                editor.apply();
+                Intent intent=new Intent(Pictures.this,selectedPictures.class);
+                startActivity(intent);}
+////                intent.putExtra("liburi",uri);
+////                intent.putExtra("title",s);
+//
+////            }
+//
+//
             }
         });
 
@@ -209,7 +216,6 @@ public class Pictures extends AppCompatActivity {
             ("http://192.168.1.6/apecs/PECS_pictures/animals/Duck.jpg"),
             ("http://192.168.1.6/apecs/PECS_pictures/animals/Fish.jpg"),
             ("http://192.168.1.6/apecs/PECS_pictures/animals/Giraffe.jpg"),
-            ("http://192.168.1.6/apecs/PECS_pictures/animals/Goat.jpg"),
             ("http://192.168.1.6/apecs/PECS_pictures/animals/Goldfish.jpg"),
             ("http://192.168.1.6/apecs/PECS_pictures/animals/Horse.jpg"),
             ("http://192.168.1.6/apecs/PECS_pictures/animals/Parrot.jpg"),
@@ -457,11 +463,11 @@ public final String[] Communicating={
     "http://192.168.1.6/apecs/PECS_pictures/Communicating/Wait.jpg",
     "http://192.168.1.6/apecs/PECS_pictures/Communicating/Wave.jpg",
     "http://192.168.1.6/apecs/PECS_pictures/Communicating/Wink.jpg",
-    "http://192.168.1.6/apecs/PECS_pictures/Communicating/Winner.jpg",
     "http://192.168.1.6/apecs/PECS_pictures/Communicating/Yeah.jpg",
     "http://192.168.1.6/apecs/PECS_pictures/Communicating/Yikes.jpg",
     "http://192.168.1.6/apecs/PECS_pictures/Communicating/Yucky.jpg",
-    "http://192.168.1.6/apecs/PECS_pictures/Communicating/Yummy.jpg"
+    "http://192.168.1.6/apecs/PECS_pictures/Communicating/Yummy.jpg",
+
     };
 public final String[] Foods={
         "http://192.168.1.6/apecs/PECS_pictures/Foods/Apple.jpg",
@@ -545,7 +551,6 @@ public final String[] Foods={
         "http://192.168.1.6/apecs/PECS_pictures/Foods/Sliced_Plum.jpg",
         "http://192.168.1.6/apecs/PECS_pictures/Foods/Soda.jpg",
         "http://192.168.1.6/apecs/PECS_pictures/Foods/Soda_Pop.jpg",
-        "http://192.168.1.6/apecs/PECS_pictures/Foods/Spinach.jpg",
         "http://192.168.1.6/apecs/PECS_pictures/Foods/Strawberry.jpg",
         "http://192.168.1.6/apecs/PECS_pictures/Foods/Sugar.jpg",
         "http://192.168.1.6/apecs/PECS_pictures/Foods/Sundae.jpg",
@@ -666,11 +671,9 @@ public final String[] Places=
 public final String[] SelfHelp=
         {
                 "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Bath.jpg",
-                "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Bathtime.jpg",
                 "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Blow_Nose.jpg",
                 "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Brush_Hair.jpg",
                 "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Brush_Teeth.jpg",
-                "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Clean_ears(1).jpg",
                 "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Clean_ears.jpg",
                 "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Clean_up.jpg",
                 "http://192.168.1.6/apecs/PECS_pictures/Self%20Help/Clip_Nails.jpg",
