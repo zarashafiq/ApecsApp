@@ -55,6 +55,7 @@ public class selectedPictures extends AppCompatActivity {
         String image6uri=sharedPreferences.getString("image6value","");
         SharedPreferences.Editor editor=sharedPreferences.edit();
         int imageNumber=sharedPreferences.getInt("tobeadded",1);
+        String imagetitle=sharedPreferences.getString("title","");
         if(level==2)
         { imageView3.setEnabled(false);
             imageView4.setEnabled(false);
@@ -64,26 +65,32 @@ public class selectedPictures extends AppCompatActivity {
         if(imageNumber==1)
         {imageView=imageView1;
         editor.putString("image1value",value);
+        editor.putString("imagetitle1",imagetitle);
         editor.apply();}
         if(imageNumber==2)
         {imageView=imageView2;
         editor.putString("image2value",value);
+        editor.putString("imagetitle2",imagetitle);
         editor.apply();}
         if(imageNumber==3)
         {imageView=imageView3;
             editor.putString("image3value",value);
+            editor.putString("imagetitle3",imagetitle);
             editor.apply();}
         if(imageNumber==4)
         {imageView=imageView4;
             editor.putString("image4value",value);
+            editor.putString("imagetitle4",imagetitle);
             editor.apply();}
         if(imageNumber==5)
         {imageView=imageView5;
             editor.putString("image5value",value);
+            editor.putString("imagetitle5",imagetitle);
             editor.apply();}
         if(imageNumber==6)
         {imageView=imageView6;
             editor.putString("image6value",value);
+            editor.putString("imagetitle6",imagetitle);
             editor.apply();}
         Picasso.get().load(value).into(imageView);
         if(!image1uri.equals(""))
@@ -181,7 +188,8 @@ public class selectedPictures extends AppCompatActivity {
     {SharedPreferences sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
         int i = sharedPreferences.getInt("level",1);
         if(i==2)
-        {intent=new Intent (selectedPictures.this,CommunicationInterface2.class); }
+        {
+            intent=new Intent (selectedPictures.this,CommunicationInterface2.class); }
         startActivity(intent);
     }
 }
