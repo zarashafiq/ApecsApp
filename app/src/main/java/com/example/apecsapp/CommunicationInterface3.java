@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Locale;
 import java.util.TimerTask;
 
-public class CommunicationInterface2 extends AppCompatActivity {
+public class CommunicationInterface3 extends AppCompatActivity {
     TextToSpeech t1;
     ImageButton b1;
     ImageView imageView;
@@ -45,35 +45,26 @@ public class CommunicationInterface2 extends AppCompatActivity {
     String resId2;
     int l;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_communication_interface2);
-        imageView=findViewById(R.id.myimage3rd);
-        imageView2=findViewById(R.id.myimage3rd2);
-        b1=findViewById(R.id.speakbutton3rd);
-        b2=findViewById(R.id.reloadimage3rd);
+        setContentView(R.layout.activity_communication_interface3);
+        imageView = findViewById(R.id.myimage4th);
+        imageView2 = findViewById(R.id.myimage4th2);
+        b1 = findViewById(R.id.speakbutton4th);
+        b2 = findViewById(R.id.reloadimage4th);
         sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
-        l=sharedPreferences.getInt("level",2);
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        if(sharedPreferences.contains("image1value")) {
+        l = sharedPreferences.getInt("level", 2);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Picasso.get().load("http://192.168.1.6/apecs/PECS_pictures/Communicating/I_Want.jpg").into(imageView);
+        if (sharedPreferences.contains("image1value")) {
             resId = sharedPreferences.getString("image1value", "");
             imageUri1 = Uri.parse(resId);
-            Picasso.get().load(resId).into(imageView);
+            Picasso.get().load(resId).into(imageView2);
         }
-        if(sharedPreferences.contains("image2value")) {
-            resId2 = sharedPreferences.getString("image2value", "");
-            imageUri2 = Uri.parse(resId2);
-            Picasso.get().load(resId2).into(imageView2);
-        }
+        image1title="I want";
         if(sharedPreferences.contains("imagetitle1")) {
-            image1title = sharedPreferences.getString("imagetitle1", "");
-
-        }
-        if(sharedPreferences.contains("imagetitle2")) {
-            image2title = sharedPreferences.getString("imagetitle2", "");
-
+            image2title = sharedPreferences.getString("imagetitle1", "");
         }
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -86,7 +77,6 @@ public class CommunicationInterface2 extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), image1title, Toast.LENGTH_SHORT).show();
                 t1.speak(image1title, TextToSpeech.QUEUE_FLUSH, null);
                 t1.speak(image2title,TextToSpeech.QUEUE_ADD,null);
 
@@ -98,8 +88,7 @@ public class CommunicationInterface2 extends AppCompatActivity {
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int calcualatecounter=sharedPreferences.getInt("counter2",0);
-                Toast.makeText(getApplicationContext(),String.valueOf(calcualatecounter),Toast.LENGTH_LONG);
+                int calcualatecounter=sharedPreferences.getInt("counter3",0);
                 if(calcualatecounter==10) {
                     //Toast.makeText(getApplicationContext(), "Move to next Activity", Toast.LENGTH_SHORT).show();
                     builder.setMessage("It looks like you should move to the next phase")
@@ -107,13 +96,13 @@ public class CommunicationInterface2 extends AppCompatActivity {
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if (l==2)
-                                    {l=3;
+                                    if (l==3)
+                                    {l=4;
                                         editor.putInt("level",l);
                                         editor.apply();}
                                     Toast.makeText(getApplicationContext(),String.valueOf(l),Toast.LENGTH_LONG).show();
-                                    Intent intent=new Intent(CommunicationInterface2.this,selectedPictures.class);
-                                    editor.putString("image1value", resId);
+                                    Intent intent=new Intent(CommunicationInterface3.this,selectedPictures.class);
+                                    editor.putString("image1value", resId2);
                                     editor.apply();
                                     startActivity(intent);
                                 }
@@ -131,8 +120,7 @@ public class CommunicationInterface2 extends AppCompatActivity {
 
                 }
                 else{calcualatecounter++;
-                    editor.putInt("counter2",calcualatecounter);
-                    Toast.makeText(getApplicationContext(),String.valueOf(calcualatecounter),Toast.LENGTH_LONG).show();
+                    editor.putInt("counter3",calcualatecounter);
                     editor.apply();
                     finish();
                     overridePendingTransition(0, 0);
@@ -142,11 +130,11 @@ public class CommunicationInterface2 extends AppCompatActivity {
 
             }
         });
+        imageView.setOnTouchListener(new CommunicationInterface3.MyTouchListener());
+        imageView2.setOnTouchListener(new CommunicationInterface3.MyTouchListener());
 
-        imageView.setOnTouchListener(new CommunicationInterface2.MyTouchListener());
-        imageView2.setOnTouchListener(new CommunicationInterface2.MyTouchListener());
+        findViewById(R.id.topleft4).setOnDragListener(new CommunicationInterface3.MyDragListener());
 
-        findViewById(R.id.topleft3).setOnDragListener(new CommunicationInterface2.MyDragListener());
     }
     private final class MyTouchListener implements View.OnTouchListener {
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -219,5 +207,4 @@ public class CommunicationInterface2 extends AppCompatActivity {
         }
         super.onPause();
     }
-
 }

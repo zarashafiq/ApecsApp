@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="n">
-        <activity android:name=".CommunicationInterface2"></activity>
+        <activity android:name=".CommunicationInterface4"></activity>
+        <activity android:name=".CommunicationInterface3" />
+        <activity android:name=".CommunicationInterface2" />
         <activity android:name=".selectedPictures" />
         <activity android:name=".Pictures" />
         <activity android:name=".CommunicationInterface" />

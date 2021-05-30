@@ -1,14 +1,14 @@
 package com.example.apecsapp;
 
 import android.content.ClipData;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.DragEvent;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.PopupWindow;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Locale;
 import java.util.TimerTask;
 
-public class CommunicationInterface2 extends AppCompatActivity {
+public class CommunicationInterface4 extends AppCompatActivity {
     TextToSpeech t1;
     ImageButton b1;
     ImageView imageView;
@@ -45,35 +45,26 @@ public class CommunicationInterface2 extends AppCompatActivity {
     String resId2;
     int l;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_communication_interface2);
-        imageView=findViewById(R.id.myimage3rd);
-        imageView2=findViewById(R.id.myimage3rd2);
-        b1=findViewById(R.id.speakbutton3rd);
-        b2=findViewById(R.id.reloadimage3rd);
+        setContentView(R.layout.activity_communication_interface4);
+        imageView = findViewById(R.id.myimage5th);
+        imageView2 = findViewById(R.id.myimage5th2);
+        b1 = findViewById(R.id.speakbutton5th);
+        b2 = findViewById(R.id.reloadimage5th);
         sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
-        l=sharedPreferences.getInt("level",2);
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        if(sharedPreferences.contains("image1value")) {
+        l = sharedPreferences.getInt("level", 4);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Picasso.get().load("http://192.168.1.6/apecs/PECS_pictures/Communicating/I_Want.jpg").into(imageView);
+        if (sharedPreferences.contains("image1value")) {
             resId = sharedPreferences.getString("image1value", "");
             imageUri1 = Uri.parse(resId);
-            Picasso.get().load(resId).into(imageView);
+            Picasso.get().load(resId).into(imageView2);
         }
-        if(sharedPreferences.contains("image2value")) {
-            resId2 = sharedPreferences.getString("image2value", "");
-            imageUri2 = Uri.parse(resId2);
-            Picasso.get().load(resId2).into(imageView2);
-        }
+        image1title="I want";
         if(sharedPreferences.contains("imagetitle1")) {
-            image1title = sharedPreferences.getString("imagetitle1", "");
-
-        }
-        if(sharedPreferences.contains("imagetitle2")) {
-            image2title = sharedPreferences.getString("imagetitle2", "");
-
+            image2title = sharedPreferences.getString("imagetitle1", "");
         }
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -86,7 +77,6 @@ public class CommunicationInterface2 extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), image1title, Toast.LENGTH_SHORT).show();
                 t1.speak(image1title, TextToSpeech.QUEUE_FLUSH, null);
                 t1.speak(image2title,TextToSpeech.QUEUE_ADD,null);
 
@@ -94,59 +84,11 @@ public class CommunicationInterface2 extends AppCompatActivity {
 
             }
         });
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int calcualatecounter=sharedPreferences.getInt("counter2",0);
-                Toast.makeText(getApplicationContext(),String.valueOf(calcualatecounter),Toast.LENGTH_LONG);
-                if(calcualatecounter==10) {
-                    //Toast.makeText(getApplicationContext(), "Move to next Activity", Toast.LENGTH_SHORT).show();
-                    builder.setMessage("It looks like you should move to the next phase")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (l==2)
-                                    {l=3;
-                                        editor.putInt("level",l);
-                                        editor.apply();}
-                                    Toast.makeText(getApplicationContext(),String.valueOf(l),Toast.LENGTH_LONG).show();
-                                    Intent intent=new Intent(CommunicationInterface2.this,selectedPictures.class);
-                                    editor.putString("image1value", resId);
-                                    editor.apply();
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertDialog=builder.create();
-                    alertDialog.show();
+        imageView.setOnTouchListener(new CommunicationInterface4.MyTouchListener());
+        imageView2.setOnTouchListener(new CommunicationInterface4.MyTouchListener());
 
+        findViewById(R.id.topleft5).setOnDragListener(new CommunicationInterface4.MyDragListener());
 
-
-                }
-                else{calcualatecounter++;
-                    editor.putInt("counter2",calcualatecounter);
-                    Toast.makeText(getApplicationContext(),String.valueOf(calcualatecounter),Toast.LENGTH_LONG).show();
-                    editor.apply();
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(getIntent());
-                    overridePendingTransition(0, 0);}
-
-
-            }
-        });
-
-        imageView.setOnTouchListener(new CommunicationInterface2.MyTouchListener());
-        imageView2.setOnTouchListener(new CommunicationInterface2.MyTouchListener());
-
-        findViewById(R.id.topleft3).setOnDragListener(new CommunicationInterface2.MyDragListener());
     }
     private final class MyTouchListener implements View.OnTouchListener {
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -219,5 +161,30 @@ public class CommunicationInterface2 extends AppCompatActivity {
         }
         super.onPause();
     }
+    public void onButtonShowPopupWindowClick(View view) {
 
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.activitiespopup, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+       // boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+    }
 }

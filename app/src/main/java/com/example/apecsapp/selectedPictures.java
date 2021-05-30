@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -187,9 +188,21 @@ public class selectedPictures extends AppCompatActivity {
     public void ContinueWithPictures(View view)
     {SharedPreferences sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
         int i = sharedPreferences.getInt("level",1);
+        Toast.makeText(getApplicationContext(),String.valueOf(i),Toast.LENGTH_LONG);
         if(i==2)
         {
-            intent=new Intent (selectedPictures.this,CommunicationInterface2.class); }
+            intent=new Intent (selectedPictures.this,CommunicationInterface2.class);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putInt("counter2",0);
+        editor.apply();}
+        if(i==3)
+        {intent=new Intent(selectedPictures.this,CommunicationInterface3.class);
+            SharedPreferences.Editor editor=sharedPreferences.edit();
+            editor.putInt("counter3",0);
+            editor.apply();
+        }
+        if(i==4)
+        {intent=new Intent(selectedPictures.this,CommunicationInterface4.class); }
         startActivity(intent);
     }
 }

@@ -116,7 +116,8 @@ if(sharedPreferences.contains("liburi")) {
                                     editor.apply();}
                                     Toast.makeText(getApplicationContext(),String.valueOf(l),Toast.LENGTH_LONG).show();
                                     Intent intent=new Intent(CommunicationInterface.this,selectedPictures.class);
-                                    intent.putExtra("imageuri", resId);
+                                    editor.putString("image1uri",resId);
+                                    editor.apply();
                                     startActivity(intent);
                                 }
                             })
