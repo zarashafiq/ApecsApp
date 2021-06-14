@@ -37,4 +37,10 @@ public class StartOption extends AppCompatActivity {
 
 
         }
+    public void launchInstructions(View view) {
+
+        Intent intent = new Intent(this, InstructionPhases.class);
+        startActivity(intent);
+    }
+
     }

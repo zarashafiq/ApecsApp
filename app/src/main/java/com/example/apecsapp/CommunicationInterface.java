@@ -34,11 +34,12 @@ public class CommunicationInterface extends AppCompatActivity {
     ImageView imageView;
     Uri imageUri;
     SharedPreferences sharedPreferences;
-    public String finalEd;
+     String finalEd;
     TimerTask t2;
     ImageButton b2;
     String resId;
     int l;
+    boolean fromdevice;
 
 
 
@@ -56,102 +57,110 @@ public class CommunicationInterface extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
         l=sharedPreferences.getInt("level",1);
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
-//        Bundle bundle = getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
 //
-//        if (bundle != null) {
-//            if (bundle.containsKey("liburi")) {
-if(sharedPreferences.contains("liburi")) {
-    resId = sharedPreferences.getString("liburi", "");
-    imageUri = Uri.parse(resId);
-    Picasso.get().load(resId).into(imageView);
-}
-//            }
-//            if (bundle.containsKey("imageuri")) {
-//                String resId = bundle.getString("imageuri");
-//                imageUri = Uri.parse(resId);
-//                imageView.setImageURI(imageUri);
-//            }
-//
-//        }
-        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.UK);
+        if (bundle != null) {
+            if (bundle.containsKey("imageuri")) {
+                fromdevice=true;
+                String resId = bundle.getString("imageuri");
+                imageUri = Uri.parse(resId);
+                imageView.setImageURI(imageUri);
+            }
+            if (!bundle.containsKey("imageuri")) {
+                if (sharedPreferences.contains("liburi")) {
+                    resId = sharedPreferences.getString("liburi", "");
+                    imageUri = Uri.parse(resId);
+                    Picasso.get().load(resId).into(imageView);
                 }
-            }
-        });
-        if(sharedPreferences.contains("title")) {
-            String ed = sharedPreferences.getString("title","");
-            if(ed.contains("_"))
-            {String ed1=null;
-                ed1=ed.replace("_"," ");
-                finalEd = ed1;
-            }
-            else{ finalEd=ed;}
+//
 
-            b1.setOnClickListener(new View.OnClickListener() {
+//
+            }
+            t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), finalEd, Toast.LENGTH_SHORT).show();
-                    t1.speak(finalEd, TextToSpeech.QUEUE_FLUSH, null);
+                public void onInit(int status) {
+                    if (status != TextToSpeech.ERROR) {
+                        t1.setLanguage(Locale.UK);
+                    }
                 }
             });
-        }
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int calcualatecounter=sharedPreferences.getInt("counter",0);
-                if(calcualatecounter==10) {
-                    //Toast.makeText(getApplicationContext(), "Move to next Activity", Toast.LENGTH_SHORT).show();
-                    builder.setMessage("It looks like you should move to the next phase")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (l==1)
-                                    {l=2;
-                                    editor.putInt("level",l);
-                                    editor.apply();}
-                                    Toast.makeText(getApplicationContext(),String.valueOf(l),Toast.LENGTH_LONG).show();
-                                    Intent intent=new Intent(CommunicationInterface.this,selectedPictures.class);
-                                    editor.putString("image1uri",resId);
-                                    editor.apply();
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertDialog=builder.create();
-                    alertDialog.show();
+            if(!fromdevice) {
+                if (sharedPreferences.contains("title")) {
+                    String ed = sharedPreferences.getString("title", "");
+                    if (ed.contains("_")) {
+                        String ed1 = null;
+                        ed1 = ed.replace("_", " ");
+                        finalEd = ed1;
+                    } else {
+                        finalEd = ed;
+                    }
+                }
+            }
+                else
+                {finalEd=bundle.getString("devicetitle");}
+                b1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), finalEd, Toast.LENGTH_SHORT).show();
+                        t1.speak(finalEd, TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                });
 
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            b2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int calcualatecounter = sharedPreferences.getInt("counter", 0);
+                    if (calcualatecounter == 10) {
+                        //Toast.makeText(getApplicationContext(), "Move to next Activity", Toast.LENGTH_SHORT).show();
+                        builder.setMessage("It looks like you should move to the next phase")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (l == 1) {
+                                            l = 2;
+                                            editor.putInt("level", l);
+                                            editor.apply();
+                                        }
+                                        Toast.makeText(getApplicationContext(), String.valueOf(l), Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(CommunicationInterface.this, selectedPictures.class);
+                                        editor.putString("image1uri", resId);
+                                        editor.apply();
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+
+
+                    } else {
+                        calcualatecounter++;
+                        editor.putInt("counter", calcualatecounter);
+                        editor.apply();
+                        finish();
+                        overridePendingTransition(0, 0);
+                        startActivity(getIntent());
+                        overridePendingTransition(0, 0);
+                    }
 
 
                 }
-                else{calcualatecounter++;
-                editor.putInt("counter",calcualatecounter);
-                editor.apply();
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);}
-
-
-            }
-        });
+            });
 
 //        else{ Toast.makeText(getApplicationContext(), "no title", Toast.LENGTH_SHORT).show();}
 
 
-        imageView.setOnTouchListener(new MyTouchListener());
-        findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
+            imageView.setOnTouchListener(new MyTouchListener());
+            findViewById(R.id.topleft).setOnDragListener(new MyDragListener());
 
-
+        }
     }
     private final class MyTouchListener implements View.OnTouchListener {
         public boolean onTouch(View view, MotionEvent motionEvent) {

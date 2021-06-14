@@ -1,13 +1,16 @@
 package com.example.apecsapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -16,6 +19,8 @@ public class DeviceUpload extends AppCompatActivity {
     Button button;
     private static final int PICK_IMAGE = 100;
     Uri imageUri;
+    String devicetitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +35,14 @@ public class DeviceUpload extends AppCompatActivity {
                 openGallery();
             }
         });
+
+
+
     }
     public void launchCommunicationInterface (View view){
         Intent intent = new Intent(this, CommunicationInterface.class);
         intent.putExtra("imageuri", imageUri.toString());
+        intent.putExtra("devicetitle", devicetitle);
         startActivity(intent);
     }
     private void openGallery() {
@@ -46,6 +55,28 @@ public class DeviceUpload extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Image name");
+            alert.setMessage("Enter image name");
+            final EditText input = new EditText(this);
+            alert.setView(input);
+
+
+
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    devicetitle=input.getText().toString();
+
+                }
+            });
+
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+
+                }
+            });
+            alert.show();
+
         }
     }
 
